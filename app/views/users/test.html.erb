@@ -1,0 +1,35 @@
+
+
+
+
+
+<ul class="media-list">
+
+
+
+  <li class="media">
+    <div class="media-body">
+      <form action="/create_comment" method="post">
+        <!-- Hidden input for authenticity token to protect from forgery -->
+        <input name="authenticity_token" type="hidden" value="/Y0oIesP51KL6LU2uAFG1H2QClUzqbVmGcpZR1gxNV+/Gtte3MpCunTt8hETuqzLRe5ZKG/kHNUj7L19HfEZQQ==">
+
+        <input type="hidden" name="photo_id" value="15">
+
+        <input type="hidden" name="user_id" value="1">
+
+        <!-- Label and input for body -->
+        <div class="form-group">
+          <label for="body" class="sr-only">
+            Body
+          </label>
+
+          <input type="text" id="body" name="body" placeholder="Add a comment..." class="form-control" required>
+        </div>
+      </form>
+    </div>
+  </li>
+</ul>
+</div>
+</div>
+</div>
+</div>

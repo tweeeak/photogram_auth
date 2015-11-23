@@ -1,0 +1,124 @@
+<p></p>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <a href="/photos/new" class="btn btn-default btn-block">
+      <i class="fa fa-plus"></i>
+    </a>
+  </div>
+</div>
+
+<p></p>
+
+<% @photos.each do |photo| -%>
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a href="/users/<%= photo.user.id %>"><%= photo.user.username.capitalize %></a>
+          <small>
+            <%#= ((Time.zone.now - photo.created_at) / 1.day).to_s %>
+            <%= time_ago_in_words(photo.created_at) %> ago
+          </small>
+        </h3>
+      </div>
+
+      <div class="panel-body">
+        <a href="/photos/<%= photo.id %>">
+          <img src= <%= photo.image %> class="img-responsive">
+        </a>
+        <% if current_user.id == photo.user.id then -%>
+        <a href="/photos/<%= photo.id %>/edit">
+          Edit
+        </a>
+        <a href="/delete_photo/<%= photo.id %>">
+          Delete
+        </a>
+        <% end -%>
+        <p>
+
+          <!-- redo this using pluck and fans -->
+
+          <% if photo.likes.count == 0 then -%>
+          <form action="/create_like" method="post">
+            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+            <input type="hidden" name="photo_id" value="<%= photo.id %>">
+            <input type="hidden" name="user_id" value="<%= current_user.id %>">
+            <button class="btn btn-link">
+              <i class="fa fa-heart-o"></i>
+            </button>
+            <small>Be the first to like this picture</small>
+          </form>
+          <% else -%>
+          <% if photo.likes.find_by({ :user_id => current_user.id }).present? -%>
+          <!-- If I have liked, heart should be full
+          @photos.fans.pluck(:username).to_sentence-->
+          <a href="/delete_like/<%= photo.likes.find_by({ :user_id => current_user.id }).id %>" class="btn btn-link">
+            <i class="fa fa-heart"></i>
+          </a>
+          <%= photo.likes.map {|i| i.user.username.capitalize }.to_sentence %> like(s) this picture
+          <% else -%>
+          <!-- If I haven't liked, heart should be empty -->
+          <form action="/create_like" method="post">
+            <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+            <input type="hidden" name="photo_id" value="<%= photo.id %>">
+            <input type="hidden" name="user_id" value="<%= current_user.id %>">
+            <button class="btn btn-link">
+              <i class="fa fa-heart-o"></i>
+            </button>
+            <%= photo.likes.map {|i| i.user.username.capitalize }.to_sentence %> like(s) this picture
+          </form>
+          <% end -%>
+          <% end -%>
+        </p>
+        <ul class="media-list">
+          <% photo.comments.each do |comment| -%>
+          <li class="media">
+            <div class="media-body">
+              <h6 class="media-heading">
+                <a href="/users/<%= comment.user.id %>"><%= comment.user.username %></a>
+                <small>
+                  <%= time_ago_in_words(comment.created_at) %> ago
+                </small>
+              </h6>
+              <%= comment.body %>
+            </div>
+          </li>
+          <% end -%>
+
+          <li class="media">
+            <div class="media-body">
+              <form action="/create_comment" method="post">
+                <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+                <input type="hidden" name="photo_id" value="<%= photo.id %>">
+                <input type="hidden" name="user_id" value="<%= current_user.id %>">
+                <div class="form-group">
+                  <label for="body" class="sr-only">
+                    Body
+                  </label>
+                  <input type="text" id="body" name="body" placeholder="Add a comment..." class="form-control" required>
+                </div>
+              </form>
+            </div>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+<% end -%>
+
+
+
+
+
+
+
+
+
+
+
+
+
