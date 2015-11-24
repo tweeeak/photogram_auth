@@ -2,6 +2,7 @@ class LikesController < ApplicationController
 
   def mylikes
     @user = current_user
+    #Ordered by recent likes, not necessarily most recent pics.
     @likes = Like.where({ :user_id => current_user.id }).order(created_at: :desc )
   end
 
